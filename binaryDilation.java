@@ -44,10 +44,7 @@ public class binaryDilation {
 		Mat grayscaleMat=mat.clone();
 		Imgproc.cvtColor(mat, grayscaleMat, Imgproc.COLOR_BGR2GRAY);
 		Mat binaryMat=grayscaleMat.clone();
-		//Imgproc.adaptiveThreshold(grayscaleMat, binaryMat, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 3, 3);
-		Imgproc.threshold(grayscaleMat, binaryMat,50, 255, Imgproc.THRESH_BINARY);
-		//Mat convertMat=new Mat();
-		//mat.convertTo(convertMat,CvType.CV_8UC1);
+		Imgproc.threshold(grayscaleMat, binaryMat, 50, 255, Imgproc.THRESH_BINARY);
 		
 		final List<MatOfPoint> contours = new ArrayList<>();
 	    final Mat hierarchy = new Mat();
@@ -64,10 +61,8 @@ public class binaryDilation {
         
         
         Imgproc.cvtColor(blueMat,grayscaleMat2,Imgproc.COLOR_BGR2GRAY);
-        Imgproc.threshold(grayscaleMat2, binaryMat, 50, 255, Imgproc.THRESH_BINARY);
+        Imgproc.threshold(grayscaleMat2, binaryMat, 35, 255, Imgproc.THRESH_BINARY);
    	    Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5,5));
-   	   // Mat erodeElement=Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10,10));
-   	    //Imgproc.erode(binaryMat, binaryMat, erodeElement);
    	    Imgproc.dilate(binaryMat, binaryMat, dilateElement);
 		
 		
