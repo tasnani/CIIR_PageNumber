@@ -39,7 +39,7 @@ public class imageEdgeDetection extends Component{
 		f = new JFrame("Loaded image");
 		f.setSize(1000, 1000);
 		 f.setBackground(Color.BLACK);
-		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text6.png"));
+		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text7.png"));
       
 		f.add(new JLabel(new ImageIcon(inputSourceImage)));
 		
@@ -50,18 +50,18 @@ public class imageEdgeDetection extends Component{
 
 	}
 	public BufferedImage inversion(BufferedImage image) throws IOException{
-		System.out.println("image type:"+image.getType());
-		BufferedImage dumpImage=ImageIO.read(new File("/Users/tanasn/Desktop/dumptext6.png"));
+		
+		BufferedImage dumpImage=ImageIO.read(new File("/Users/tanasn/Desktop/dumptext7.png"));
 		BufferedImage convertforInverseDumpImage=new BufferedImage(dumpImage.getWidth(), dumpImage.getHeight(),BufferedImage.TYPE_3BYTE_BGR );
 		Graphics2D g2 = convertforInverseDumpImage.createGraphics();
         g2.drawRenderedImage(dumpImage, null);
         g2.dispose();
-		System.out.println("convertforInverseDumpImage type:"+convertforInverseDumpImage.getType());
+		
 		BufferedImage convertforInverseImage=new BufferedImage(image.getWidth(),image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g1 = convertforInverseImage.createGraphics();
         g1.drawRenderedImage(image, null);
         g1.dispose();
-        System.out.println("convertforInverseImage type:"+convertforInverseImage.getType());
+       
 		short[] invert = new short[256];
 		for (int i = 0; i < 256; i++)
 		invert[i] = (short)(255 - i);
@@ -76,7 +76,7 @@ public class imageEdgeDetection extends Component{
 	}
 	
 	public void writetoOutputFile(BufferedImage im) throws IOException{
-		 File outputFile=new File("/Users/tanasn/Desktop/text6result.png");
+		 File outputFile=new File("/Users/tanasn/Desktop/text7result.png");
          ImageIO.write(im,"PNG",outputFile );
           
 		
@@ -86,7 +86,7 @@ public class imageEdgeDetection extends Component{
 		
 		
 		
-		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text6result.png"));
+		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text7result.png"));
 	    f2=new JFrame("edited image");
 	    f2.setSize(1000,1000);
 	    f2.setBackground(Color.BLACK);
