@@ -62,7 +62,7 @@ public class imageEdgeDetection extends Component{
 		Graphics2D g1 = convertforInverseImage.createGraphics();
         g1.drawRenderedImage(image, null);
         g1.dispose();
-;       
+     
        
 		short[] invert = new short[256];
 		for (int i = 0; i < 256; i++)
