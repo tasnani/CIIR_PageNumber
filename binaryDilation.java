@@ -31,16 +31,19 @@ import javax.imageio.ImageIO;
 
 public class binaryDilation {
 
-//int smallestContourLoc=0;
+int smallestContourLoc=0;
 Mat binaryMat;
 Mat blueMat;
 final List<MatOfPoint> contours = new ArrayList<>();
 	public BufferedImage dilate(BufferedImage bi) throws IOException{
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		
+		
 		BufferedImage convertImage=new BufferedImage(bi.getWidth(),bi.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g2 = convertImage.createGraphics();
         g2.drawRenderedImage(bi, null);
         g2.dispose();
+        
         byte[] data = ((DataBufferByte) convertImage.getRaster().getDataBuffer()).getData();
 		Mat mat = new Mat(convertImage.getHeight(), convertImage.getWidth(), CvType.CV_8UC3);
 		mat.put(0,0 , data);
@@ -52,7 +55,7 @@ final List<MatOfPoint> contours = new ArrayList<>();
 		
 	    final Mat hierarchy = new Mat();
 	    Imgproc.findContours(binaryMat, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-	    //double smallestcontourArea=Double.MAX_VALUE;
+	    double smallestcontourArea=Double.MAX_VALUE;
 	    //int smallestContourLoc=0;
         blueMat=mat.clone();
         boolean oriented=false;
@@ -84,9 +87,9 @@ final List<MatOfPoint> contours = new ArrayList<>();
    	    		));
    	    Imgproc.dilate(binaryMat, binaryMat, dilateElement);
    	    
+//System.out.println("contour list size:"+contours.size());
 		
-		
-		//Imgproc.drawContours(blueMat, contours, smallestContourLoc, new Scalar(0, 0,255 ), -1);
+		//Imgproc.drawContours(blueMat, contours, 530, new Scalar(0, 0,255 ), -1);
     	
          
 		MatOfByte bytemat = new MatOfByte();
