@@ -38,7 +38,7 @@ public class imageEdgeDetection extends Component{
 		f = new JFrame("Loaded image");
 		f.setSize(1000, 1000);
 		 f.setBackground(Color.BLACK);
-		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text1.png"));
+		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text7.png"));
       
 		f.add(new JLabel(new ImageIcon(inputSourceImage)));
 		
@@ -80,7 +80,7 @@ public class imageEdgeDetection extends Component{
 	}
 	
 	public void writetoOutputFile(BufferedImage im) throws IOException{
-		 File outputFile=new File("/Users/tanasn/Desktop/text1result.png");
+		 File outputFile=new File("/Users/tanasn/Desktop/text7result.png");
          ImageIO.write(im,"PNG",outputFile );
           
 		
@@ -90,7 +90,7 @@ public class imageEdgeDetection extends Component{
 		
 		
 		
-		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text1result.png"));
+		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text7result.png"));
 	    f2=new JFrame("edited image");
 	    f2.setSize(1000,1000);
 	    f2.setBackground(Color.BLACK);
