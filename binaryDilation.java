@@ -77,20 +77,22 @@ Mat binaryMat;
 		
 	    final Mat hierarchy = new Mat();
 	    Imgproc.findContours(binaryMat, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-	    double smallestcontourArea=Double.MAX_VALUE;
-	    int smallestContourLoc=0;
+	    //double smallestcontourArea=Double.MAX_VALUE;
+	    //int smallestContourLoc=0;
        Mat blueMat=mat.clone();
-        boolean oriented=false;
+        //boolean oriented=false;
        
        MatOfPoint2f approxCurve=new MatOfPoint2f();
         for(int i=0;i<contours.size();i++){
         	Imgproc.drawContours(blueMat, contours, i, new Scalar(0, 255,0 ), -1);
+        	/*
         	MatOfPoint2f contour2f =new MatOfPoint2f(contours.get(i).toArray());
         	double approxDistance =Imgproc.arcLength(contour2f,true)*0.02;
         	Imgproc.approxPolyDP(contour2f, approxCurve,approxDistance, true);
         	MatOfPoint points=new MatOfPoint(approxCurve.toArray());
         	Rect rect=Imgproc.boundingRect(points);
         	Core.rectangle(blueMat, new Point(rect.x, rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(255,0,0),3);
+        	*/
         	
         	//if( Imgproc.contourArea(contours.get(i),oriented)<smallestcontourArea && Imgproc.contourArea(contours.get(i),oriented)!=0.0 ){
         		//smallestcontourArea=Imgproc.contourArea(contours.get(i));
@@ -119,7 +121,7 @@ Mat binaryMat;
     	
          
 		MatOfByte bytemat = new MatOfByte();
-		Highgui.imencode(".PNG", blueMat, bytemat);
+		Highgui.imencode(".PNG", binaryMat, bytemat);
 		byte[] bytes = bytemat.toArray();
 		InputStream in = new ByteArrayInputStream(bytes);
 		BufferedImage outputImage = ImageIO.read(in);
