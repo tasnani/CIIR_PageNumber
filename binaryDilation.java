@@ -85,19 +85,19 @@ Mat binaryMat;
        MatOfPoint2f approxCurve=new MatOfPoint2f();
         for(int i=0;i<contours.size();i++){
         	Imgproc.drawContours(blueMat, contours, i, new Scalar(0, 255,0 ), -1);
-        	//MatOfPoint2f contour2f =new MatOfPoint2f(contours.get(i).toArray());
-        	//double approxDistance =Imgproc.arcLength(contour2f,true)*0.02;
-        	//Imgproc.approxPolyDP(contour2f, approxCurve,approxDistance, true);
-        	//MatOfPoint points=new MatOfPoint(approxCurve.toArray());
-        	//Rect rect=Imgproc.boundingRect(points);
-        	//Core.rectangle(blueMat, new Point(rect.x, rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(255,0,0),3);
+        	MatOfPoint2f contour2f =new MatOfPoint2f(contours.get(i).toArray());
+        	double approxDistance =Imgproc.arcLength(contour2f,true)*0.02;
+        	Imgproc.approxPolyDP(contour2f, approxCurve,approxDistance, true);
+        	MatOfPoint points=new MatOfPoint(approxCurve.toArray());
+        	Rect rect=Imgproc.boundingRect(points);
+        	Core.rectangle(blueMat, new Point(rect.x, rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(255,0,0),3);
         	
-        	if( Imgproc.contourArea(contours.get(i),oriented)<smallestcontourArea && Imgproc.contourArea(contours.get(i),oriented)!=0.0 ){
-        		smallestcontourArea=Imgproc.contourArea(contours.get(i));
-        		smallestContourLoc=i;
+        	//if( Imgproc.contourArea(contours.get(i),oriented)<smallestcontourArea && Imgproc.contourArea(contours.get(i),oriented)!=0.0 ){
+        		//smallestcontourArea=Imgproc.contourArea(contours.get(i));
+        		//smallestContourLoc=i;
         		
         		
-        	}
+        	//}
         }
         
       
@@ -115,7 +115,7 @@ Mat binaryMat;
    	    
 //System.out.println("contour list size:"+contours.size());
 		
-		Imgproc.drawContours(blueMat, contours, 530, new Scalar(0, 0,255 ), -1);
+		Imgproc.drawContours(blueMat, contours, 530, new Scalar(0, 0,255 ), -1); 
     	
          
 		MatOfByte bytemat = new MatOfByte();
