@@ -41,7 +41,7 @@ public class binaryDilation {
 
 int smallestContourLoc=0;
 Mat binaryMat;
-
+connectedComponent cc=new connectedComponent();
 
 	public BufferedImage dilate(BufferedImage bi) throws IOException{
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -129,9 +129,11 @@ Mat binaryMat;
 		byte[] bytes = bytemat.toArray();
 		InputStream in = new ByteArrayInputStream(bytes);
 		BufferedImage outputImage = ImageIO.read(in);
+		//cc.loadImage(outputImage);
+		int[] r=cc.loadImage(outputImage);
+		outputImage=cc.converttoBufferedImage(r);
 	    return outputImage;
 	   
-
 		
 		
 	}
