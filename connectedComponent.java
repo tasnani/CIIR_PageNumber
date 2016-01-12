@@ -1,6 +1,7 @@
 package pagenumber;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.awt.*;
 
@@ -10,9 +11,14 @@ import org.opencv.core.Mat;
 public class connectedComponent {
 	int[][]  imageArray;
 	int[] imageArrayN;
-	public void loadImage(BufferedImage im){
+	int trueImageWidth=0;
+	int trueImageHeight=0;
+	boolean b=true;
+	public int[] loadImage(BufferedImage im){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		ArrayList<Integer> temp=new ArrayList<>();
+		trueImageWidth=im.getWidth();
+		trueImageHeight=im.getHeight();
 		imageArray=new int[im.getWidth()][im.getHeight()];
 		for(int x=0;x<im.getWidth();x++){
 			for(int y=0;y<im.getHeight();y++ ){
@@ -27,13 +33,13 @@ public class connectedComponent {
 		}
 		
 	  
-			
+		return	Labeling(imageArrayN,new Dimension(im.getWidth(),im.getHeight()),b);
 		
 	}
 		
 		int maxLabels=900000;
 		int nextLabel=1;
-		//background value should be 0, because the background is black and the components are in white 
+		//background value should be 0, because the background is black and the components are in white, so it should be true
 		
 		public int[] Labeling(int[] ia, Dimension d ,boolean background){
 			int label[]=labeling(ia,d,background);
@@ -139,7 +145,16 @@ public class connectedComponent {
 					
 					
 				}
-			
+		//convert rst[] back to BufferedImage
+			public BufferedImage converttoBufferedImage(int[] outputArray){
+				BufferedImage output = new BufferedImage(trueImageWidth,trueImageHeight,BufferedImage.TYPE_3BYTE_BGR);
+				
+				WritableRaster raster = (WritableRaster) output.getData();
+				raster.setPixels(0,0,trueImageWidth,trueImageHeight,outputArray);
+				output.setData(raster);
+				return output;
+				
+			}
 		}
 		
 		
