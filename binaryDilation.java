@@ -115,6 +115,10 @@ Mat binaryMat;
    	    		));
    	    Imgproc.dilate(binaryMat, binaryMat, dilateElement);
    	    
+   	    Mat ccMat=new Mat(binaryMat.size(),CvType.CV_16U);
+   	    binaryMat.convertTo(ccMat, CvType.CV_16U);
+   	    
+   	    
 //System.out.println("contour list size:"+contours.size());
 		
 		//Imgproc.drawContours(blueMat, contours, 530, new Scalar(0, 0,255 ), -1); 
