@@ -27,7 +27,7 @@ public class imageEdgeDetection extends Component{
 	 BufferedImage outputSourceImage;
 	 BufferedImage i;
 	 binaryDilation bD=new binaryDilation(); 
-	
+	 
 	 
 	 
 	
