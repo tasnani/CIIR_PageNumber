@@ -28,6 +28,14 @@ public class connectedComponent {
 		for(int x=0;x<im.getWidth();x++){
 			for(int y=0;y<im.getHeight();y++ ){
 				imageArray[x][y]=im.getRGB(x, y);
+				if(imageArray[x][y]==-16777216){
+					imageArray[x][y]=0;
+				}
+				/*
+				if(x<40 && x> 10 && y<40 && y>10 ){
+				System.out.println("["+x+"]"+"["+y+"]"+"="+ imageArray[x][y]);
+				}
+				*/
 				temp.add(imageArray[x][y]);
 				
 			}
@@ -44,7 +52,7 @@ public class connectedComponent {
 		
 	}
 		
-		int maxLabels=80000;
+		int maxLabels=8000000;
 		int nextLabel=1;
 		int[] label;
 		//background value should be 0, because the background is black and the components are in white, so it should be true
@@ -111,7 +119,7 @@ public class connectedComponent {
 						System.err.println("maximum number of labels reached");
 						System.exit(1);
 					}
-					rst[j*w+k]=m;
+					rst[k*w+j]=m;
 					if(j>0 && imageArrayN[k*w+j-1]==imageArrayN[k*w+j]&& rst[k*w+j-1]!=m)
 						uf_union(m,rst[k*w+j-1],parent);
 						if(k>0 && imageArrayN[(k-1)*w+j]==imageArrayN[k*w+j]&& rst[(k-1)*w+j]!=m)
@@ -163,7 +171,7 @@ public class connectedComponent {
 		//convert rst[] back to BufferedImage
 			public BufferedImage colorLabel(BufferedImage im, int[] o){
 				colorLabeling cL=new colorLabeling();
-			BufferedImage output=cL.addcolorLabels(im,o,w,h,maxLabels);
+			BufferedImage output=cL.addcolorLabels(im,imageArray,o,w,h,maxLabels);
 				return output;
 				
 				
