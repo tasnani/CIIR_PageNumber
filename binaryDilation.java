@@ -131,7 +131,8 @@ connectedComponent cc=new connectedComponent();
 		BufferedImage outputImage = ImageIO.read(in);
 		//cc.loadImage(outputImage);
 		int[] r=cc.loadImage(outputImage);
-		outputImage=cc.converttoBufferedImage(r);
+	
+		outputImage=cc.colorLabel(outputImage,r);
 	    return outputImage;
 	   
 		
