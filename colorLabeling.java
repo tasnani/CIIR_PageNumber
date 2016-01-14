@@ -63,18 +63,24 @@ g2.dispose();
 
  
  int singleArrayCounter=0;
+ 
 	    for(int k=0;k<width;k++){
 	    	for(int j=0;j<height;j++){
-	    		if(mostLocation.get(singleArrayCounter)==singleArrayCounter){
+	    		for(int listCounter=0;listCounter<mostLocation.size();listCounter++){
+	    		if(mostLocation.get(listCounter)==singleArrayCounter){
 	    			System.out.println("X coordinate of pixel:"+k);
 	    			System.out.println("Y coordinate of pixel"+j);
 	    			newIM.setRGB(k, j, new Color(0, 255, 0).getRGB());
-	    			singleArrayCounter++;
+	    			
 	    		}
+	    		listCounter++;
+	    		
+	    		}
+	    		singleArrayCounter++;
 	    	}
 	    }
 	    
-return im;
+return newIM;
 		
 	}
 
