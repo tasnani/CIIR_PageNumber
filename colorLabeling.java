@@ -1,5 +1,6 @@
 package pagenumber;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 public class colorLabeling {
@@ -43,7 +44,7 @@ public class colorLabeling {
 	    		mostLocation.add(h);
 	    		
 	    			System.out.println("Location:"+h);	
-	    		
+	    	
 	    		
 	    	}
 	    }
@@ -55,6 +56,10 @@ for(int y=0;y<mostLocation.size();y++){
 	int column=(int)y - height*row;
 	System.out.println("Y coordinate of pixel in the image:"+column);
 }
+BufferedImage newIM=new BufferedImage(im.getWidth(),im.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+Graphics2D g2 = newIM.createGraphics();
+g2.drawRenderedImage(im, null);
+g2.dispose();
 
  
  int singleArrayCounter=0;
@@ -63,6 +68,7 @@ for(int y=0;y<mostLocation.size();y++){
 	    		if(mostLocation.get(singleArrayCounter)==singleArrayCounter){
 	    			System.out.println("X coordinate of pixel:"+k);
 	    			System.out.println("Y coordinate of pixel"+j);
+	    			newIM.setRGB(k, j, new Color(0, 255, 0).getRGB());
 	    			singleArrayCounter++;
 	    		}
 	    	}
