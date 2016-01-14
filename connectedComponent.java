@@ -14,21 +14,22 @@ public class connectedComponent {
 	int[] imageArrayN;
 	int trueImageWidth=0;
 	int trueImageHeight=0;
+	BufferedImage im;
+	
 	boolean b=true;
 	public int[] loadImage(BufferedImage im){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		System.out.println(im.getType());
 		ArrayList<Integer> temp=new ArrayList<>();
 		trueImageWidth=im.getWidth();
 		trueImageHeight=im.getHeight();
-		System.out.println("trueImageWidth:"+trueImageWidth);
-		System.out.println("trueImageHeight:"+trueImageHeight);
+		
 		
 		imageArray=new int[im.getWidth()][im.getHeight()];
 		for(int x=0;x<im.getWidth();x++){
 			for(int y=0;y<im.getHeight();y++ ){
 				imageArray[x][y]=im.getRGB(x, y);
 				temp.add(imageArray[x][y]);
+				
 			}
 		}
 		imageArrayN=new int[temp.size()];
@@ -63,7 +64,7 @@ public class connectedComponent {
 			 for (int i=1; i<stat.length; i++) {
 		            if (stat[i]!=0) stat[i]=j++;
 		        }
-			 System.out.println("From "+nextLabel+"to"+(j-1)+"regions");
+			
 			  
 		        nextLabel= j-1;
 		        for (int i=0;i<imageArrayN.length;i++) label[i]= stat[label[i]];
@@ -75,10 +76,13 @@ public class connectedComponent {
 		}
 		
 		int[] labels;
+		int w;
+		int h;
 		
 		public int[] labeling(int[] ia,Dimension d, boolean background ){
-			int w=(int)d.getWidth();
-			int h=(int)d.getHeight();
+			
+			 w=(int)d.getWidth();
+			 h=(int)d.getHeight();
 			int[] rst=new int[w*h];
 			labels=new int[maxLabels];
 			int[] parent=new int[maxLabels];
@@ -123,7 +127,7 @@ public class connectedComponent {
 				}
 				nextLabel--;
 				if(!background)nextLabel--;
-						System.out.println(nextLabel+"regions");
+						
 					
 			
 			
@@ -157,10 +161,13 @@ public class connectedComponent {
 					
 				}
 		//convert rst[] back to BufferedImage
-			public BufferedImage converttoBufferedImage(int[] outputArray){
-				for(int i=0;i<outputArray.length;i++){
-					System.out.print(outputArray[i]);
-				}
+			public BufferedImage colorLabel(BufferedImage im, int[] o){
+				colorLabeling cL=new colorLabeling();
+			BufferedImage output=cL.addcolorLabels(im,o,w,h,maxLabels);
+				return output;
+				
+				
+				/*
 				//int[] newOutputArray=Arrays.copyOf(outputArray,outputArray.length);
 			BufferedImage output = new BufferedImage(trueImageWidth,trueImageHeight,BufferedImage.TYPE_BYTE_GRAY);
 			
@@ -168,6 +175,7 @@ public class connectedComponent {
 				raster.setPixels(0,0,trueImageWidth,trueImageHeight,outputArray);
 				output.setData(raster);
 				return output;
+				*/
 				
 			}
 		}
