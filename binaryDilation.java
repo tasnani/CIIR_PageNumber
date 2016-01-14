@@ -111,7 +111,7 @@ connectedComponent cc=new connectedComponent();
         
         Imgproc.cvtColor(blueMat,grayscaleMat2,Imgproc.COLOR_BGR2GRAY);
         Imgproc.threshold(grayscaleMat2, binaryMat, 35, 255, Imgproc.THRESH_BINARY);
-   	    Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(6,6
+   	    Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(11,11
    	    		));
    	    Imgproc.dilate(binaryMat, binaryMat, dilateElement);
    	    
