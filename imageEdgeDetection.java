@@ -7,6 +7,7 @@ import java.awt.*;
 
 
 
+
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
@@ -17,7 +18,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import java.awt.color.*;
-
 
 public class imageEdgeDetection extends Component{
 	 BufferedImage img;
@@ -38,7 +38,7 @@ public class imageEdgeDetection extends Component{
 		f = new JFrame("Loaded image");
 		f.setSize(1000, 1000);
 		 f.setBackground(Color.BLACK);
-		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text3.png"));
+		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text2.png"));
       
 		f.add(new JLabel(new ImageIcon(inputSourceImage)));
 		
@@ -80,7 +80,7 @@ public class imageEdgeDetection extends Component{
 	}
 	
 	public void writetoOutputFile(BufferedImage im) throws IOException{
-		 File outputFile=new File("/Users/tanasn/Desktop/text3result.png");
+		 File outputFile=new File("/Users/tanasn/Desktop/text2result.png");
          ImageIO.write(im,"PNG",outputFile );
           
 		
@@ -88,9 +88,9 @@ public class imageEdgeDetection extends Component{
 	
 	public void displayOutputFile() throws IOException{
 		
+
 		
-		
-		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text3result.png"));
+		outputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text2result.png"));
 	    f2=new JFrame("edited image");
 	    f2.setSize(1000,1000);
 	    f2.setBackground(Color.BLACK);

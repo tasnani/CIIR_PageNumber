@@ -28,9 +28,11 @@ public class connectedComponent {
 		for(int x=0;x<im.getWidth();x++){
 			for(int y=0;y<im.getHeight();y++ ){
 				imageArray[x][y]=im.getRGB(x, y);
+			//System.out.println(imageArray[x][y]);
 				if(imageArray[x][y]==-16777216){
 					imageArray[x][y]=0;
 				}
+				
 				/*
 				if(x<40 && x> 10 && y<40 && y>10 ){
 				System.out.println("["+x+"]"+"["+y+"]"+"="+ imageArray[x][y]);
