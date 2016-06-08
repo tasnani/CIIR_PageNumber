@@ -1,10 +1,16 @@
 package pagenumber;
 import javax.xml.parsers.*;
+
+
+
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
 import java.util.*;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.*;
+
 
 public class SAXLocalNameCount extends DefaultHandler {
 	 private Hashtable tags;
@@ -44,7 +50,7 @@ public class SAXLocalNameCount extends DefaultHandler {
 	    
 	 int linesperPage=0;
 	 int linesperPage2=0;
-	 
+	 int q=0;
 	 
 
 	public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException{
@@ -169,7 +175,8 @@ public void characters(char ch[], int start, int length)
 	     }
 	     
 	     if(status==true){
-	    	 System.out.println("Page Number ? "+tempString +" Line Tag Number: "+ linesperPage+" Word Tag Number:"+ wordTagNumber+" Words in a line: "+ wordTagsAtPrevLine+"<PARAM> sequence : "+tempValue);
+	    	 
+	    	 System.out.println(q+" "+ "Page Number ? "+tempString +" Line Tag Number: "+ linesperPage+" Word Tag Number:"+ wordTagNumber+" Words in a line: "+ wordTagsAtPrevLine+"<PARAM> sequence : "+tempValue);
 	    	 pagesequenceList.add(tempValue); 
 	    	 tempValue="";
 	    	pagenumberpossList.add(tempString);
@@ -178,7 +185,7 @@ public void characters(char ch[], int start, int length)
 	    	String t=new String(Integer.toString(wordTagNumber));
 	    	wordtagnumberList.add(t);
 	    	totalwordsperlineList.add(wordTagsAtPrevLine);
-	   
+	    	q++;
 	    	if(linesperPage2>0){
 	    	numbersperpageimageList.add(linesperPage2);}
 	    	
@@ -209,46 +216,88 @@ public void endElement(String uri, String localName, String qName)
 	            System.out.println("Local Name \"" + tag + "\" occurs " 
 	                               + count + " times");
 	        }  
+	        
+	      Double[] feature1=new Double[linetagnumberList.size()];
 	        System.out.println("------------------------------FEATURE 1: WHAT % OF THE PAGE IS THE POSSIBLE PAGE NUMBER FOUND IN? -------------------------------------");
 		       int i=0;
 		       try{
 		       for(i=0;i<linetagnumberList.size();i++){
+		    	  
 		    	   double pcgts=Double.parseDouble(linetagnumberList.get(i)) / numbersperpageimageList.get(i);
 		    	  pcgts=pcgts*100;
-		    	   System.out.println(pcgts +" %");
+		    	  System.out.println(pcgts);
+		    	   feature1[i]=pcgts;
 		    	   
 		       }
 		       }catch(ArithmeticException ae){
 		    	   System.out.println(linetagnumberList.get(i) + "/" + numbersperpageimageList.get(i));
 		       }
-		       
+		     
 	        System.out.println("------------------------------FEATURE 2: DOES THE POSSIBLE PAGE NUMBER N FOUND FALL IN N-1, N AND N+1 SEQUENCE OF PAGE NUMBERS BEFORE AND AFTER IT? -------------------------------------");
-	       for(int k=1;k<=pagenumberpossList.size()-2;k++){
+	       String[] feature2=new String[pagenumberpossList.size()];
+	        for(int k=0;k<=pagenumberpossList.size()-2;k++){
+	        	if(k==0){
+	        		if(Integer.parseInt(pagenumberpossList.get(k))==Integer.parseInt(pagenumberpossList.get(k+1))-1){
+	        			System.out.println("Number falls in sequence before n+1 pages.");
+	        			feature2[k]="1";
+	        		}else if(pagenumberpossList.get(k).equals(" ")) {
+	        			System.out.println("Number is missing");
+	        			feature2[k]="0";
+	        		}else {
+	        			System.out.println("Number not in sequence");
+	        			feature2[k]="0";
+	        		}
+	        	}else{
+	        	
 	    	   System.out.println(pagenumberpossList.get(k-1)+","+pagenumberpossList.get(k)+","+pagenumberpossList.get(k+1) );
 	    	   if(Integer.parseInt(pagenumberpossList.get(k))==(Integer.parseInt(pagenumberpossList.get(k+1))-1) && Integer.parseInt(pagenumberpossList.get(k))==(Integer.parseInt(pagenumberpossList.get(k-1))+1)){
 	    		   
 	    		   
-	    		   System.out.println("Number falls in sequence between n-1 and n+1 pages.");
-	    	  
+	    		  System.out.println("Number falls in sequence between n-1 and n+1 pages.");
+	    	       feature2[k]="1";
 	    	      
 	       }else if(Integer.parseInt(pagenumberpossList.get(k+1)) == Integer.parseInt(pagenumberpossList.get(k-1))-2 && pagenumberpossList.get(k).equals("")){
-	    	   System.out.println("Missing number based on sequence is: "+String.valueOf(Integer.parseInt(pagenumberpossList.get(k+1))-1));
+	    	  
+	           feature2[k]="1";
+	          System.out.println(feature2[k]);
 	       } else {
-	    	   System.out.println("Number not in sequence.");
+	    	   feature2[k]="0";
+	    	   System.out.println("Number not in sequence");
 	       }
+	        	}
 	     
 	    }
 	      System.out.println("------------------------------------ FEATURE 3: WHAT % THROUGH THE LINE IS THE POSSIBLE PAGE NUMBER FOUND IN?------------------------");
 	       double pctgsLine=0.0;
+	       Double[] feature3=new Double[wordtagnumberList.size()];
 	      for(int j=0;j<wordtagnumberList.size();j++){
 	    	 pctgsLine= Double.parseDouble(wordtagnumberList.get(j)) / totalwordsperlineList.get(j);
 	    	 pctgsLine=pctgsLine*100;
-	    	 System.out.println(pctgsLine  +" %");
+	    	 feature3[j]=pctgsLine;
+	    	 System.out.println(pctgsLine +" %");
 	      }
-	      
-	    
-	     
+	   
+	      Charset charset=Charset.forName("US-ASCII"); 
+		     Path file=Paths.get("/Users/tanasn/Desktop/CIIR_actualNumberedData.txt");
+		     try(BufferedWriter writer = Files.newBufferedWriter(file, charset)){
+		     for(int w=0;w<wordtagnumberList.size();w++){
+		    	
+		    	 
+		    		 String x=feature1[w].toString();
+			    	 String y=feature2[w];
+			    	 String z=feature3[w].toString();
+		    		 String s=w+" "+"1:"+x+"  "+"2:"+y+"  "+"3:"+z;
+		    		 writer.write(s,0,s.length());
+		    		 writer.write('\n');
+		    	
+		     }
+		     }catch(IOException e2){
+	    		 System.out.println(e2);
+	    	 }
+	    	 
+	       
 	    	   
 	       
 	    }
+	  
 }
