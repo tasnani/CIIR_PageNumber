@@ -1,7 +1,7 @@
 VI 9
-VII 10
-VIII 11
-IX 12
+blank 10
+blank 11
+blank 12
 2 13
 3 14
 4 15

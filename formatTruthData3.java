@@ -1,3 +1,4 @@
+package pagenumber;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,7 +16,7 @@ public class formatTruthData3 {
 	ArrayList<String> pageImageNumber=new ArrayList<String>();
 	public void openFile() throws IOException{
 	
-		file="truth_data/alibra-annotated.txt";
+		file="truth_data/johann-annotated.txt";
 		
 		   BufferedReader BR=new BufferedReader(new FileReader(file));
 			
@@ -72,45 +73,54 @@ public class formatTruthData3 {
 	public void uniqueExpand(){
 		
 		
-		int c=6;
-		int index=14;
+		int c=389;
+		int index=409;
 		actualPageNumber.remove(index);
 		pageImageNumber.remove(index);
-		for(int i=28;i<=49;i++){
+		for(int i=423;i<=444;i++){
 			pageImageNumber.add(index,new Integer(i).toString());
 			actualPageNumber.add(index,new Integer(c).toString());
 			index++;
 			c++;
 		}
+		
+		/*
+		actualPageNumber.add(index, "blank");
+		pageImageNumber.add(index, "201");
+		
+		actualPageNumber.add(++index, "blank");
+		pageImageNumber.add(index, "202");
+		
+		
 	
 		index=index+1;
+		
+		c=181;
+		for(int i=204;i<=231;i++){
+			pageImageNumber.add(index,new Integer(i).toString());
+			actualPageNumber.add(index,new Integer(c).toString());
+			index++;
+			c++;
+		}
+		/*
+*/ /*
+		index=index+5;
 		actualPageNumber.remove(index);
 		pageImageNumber.remove(index);
-		c=31;
-		for(int i=51;i<=78;i++){
+		c=79;
+		for(int i=86;i<=96;i++){
 			pageImageNumber.add(index,new Integer(i).toString());
 			actualPageNumber.add(index,new Integer(c).toString());
 			index++;
 			c++;
 		}
 		
-
-		index=index+3;
-		actualPageNumber.remove(index);
-		pageImageNumber.remove(index);
-		c=60;
-		for(int i=82;i<=100;i++){
-			pageImageNumber.add(index,new Integer(i).toString());
-			actualPageNumber.add(index,new Integer(c).toString());
-			index++;
-			c++;
-		}
        
-		index=index+3;
+		index=index+5;
 		actualPageNumber.remove(index);
 		pageImageNumber.remove(index);
-		c=80;
-		for(int i=104;i<=124;i++){
+		c=95;
+		for(int i=102;i<=152;i++){
 			pageImageNumber.add(index,new Integer(i).toString());
 			actualPageNumber.add(index,new Integer(c).toString());
 			index++;
@@ -119,11 +129,22 @@ public class formatTruthData3 {
 		
 		
 		
-		index=index+3;
+		index=index+5;
 		actualPageNumber.remove(index);
 		pageImageNumber.remove(index);
-		c=102;
-		for(int i=128;i<=154;i++){
+		c=151;
+		for(int i=158;i<=163;i++){
+			pageImageNumber.add(index,new Integer(i).toString());
+			actualPageNumber.add(index,new Integer(c).toString());
+			index++;
+			c++;
+		}
+		
+		index=index+4;
+		actualPageNumber.remove(index);
+		pageImageNumber.remove(index);
+		c=161;
+		for(int i=168;i<=182;i++){
 			pageImageNumber.add(index,new Integer(i).toString());
 			actualPageNumber.add(index,new Integer(c).toString());
 			index++;
@@ -133,24 +154,14 @@ public class formatTruthData3 {
 		index=index+3;
 		actualPageNumber.remove(index);
 		pageImageNumber.remove(index);
-		c=130;
-		for(int i=158;i<=250;i++){
+		c=179;
+		for(int i=186;i<=220;i++){
 			pageImageNumber.add(index,new Integer(i).toString());
 			actualPageNumber.add(index,new Integer(c).toString());
 			index++;
 			c++;
 		}
-		
-		index=index+3;
-		actualPageNumber.remove(index);
-		pageImageNumber.remove(index);
-		c=224;
-		for(int i=254;i<=286;i++){
-			pageImageNumber.add(index,new Integer(i).toString());
-			actualPageNumber.add(index,new Integer(c).toString());
-			index++;
-			c++;
-		}
+		/*
 		
 		index=index+3;
 		actualPageNumber.remove(index);
@@ -548,7 +559,9 @@ public class formatTruthData3 {
 			System.out.println(actualPageNumber.get(i)+" "+pageImageNumber.get(i));
 			}
 		System.out.println((index)+ actualPageNumber.get(index)); 
+	
 	}
+	
 	public static void main(String args[]) throws IOException{
 		
 		
