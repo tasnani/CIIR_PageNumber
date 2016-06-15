@@ -1,6 +1,8 @@
 package pagenumber;
+import pagenumber.generateData;
 
 import org.w3c.dom.Document;
+
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,6 +20,8 @@ import java.util.Map;
 public class ExtractFeaturesBook {
 	 public static int lineNumber;
 	 public static int wordNumber;
+     public static int totalNumberOfLines;
+     public static int repeat1=0;
   public static class PageInfo {
     String book;
     int imageNumber;
@@ -94,6 +98,7 @@ public class ExtractFeaturesBook {
       List<Node> pages = XMLUtil.findTagsByName(bookXML, "OBJECT");
       for (Node page : pages) {
         List<Node> lines = XMLUtil.findTagsByName(page, "LINE");
+       
         Map<String, String> attributes = XMLUtil.getAttributes(page);
         String usemap = attributes.get("usemap");
         assert(usemap.endsWith(".djvu"));
@@ -114,8 +119,10 @@ public class ExtractFeaturesBook {
         info.height = Integer.parseInt(attributes.get("height"));
 
         ArrayList<PageNumberCandidate> candidates = new ArrayList<>();
+     
         extractFromPage(info, lines, candidates);
         candidatesPerPage.add(candidates);
+       
       }
     } catch (SAXException e) {
       e.printStackTrace();
@@ -137,17 +144,17 @@ public class ExtractFeaturesBook {
         status=false;
       }
     }
+   
     return status;
   }
 
   private static void extractFromPage(PageInfo page, List<Node> lines, ArrayList<PageNumberCandidate> candidates) {
-      int totalNumberOfLines=lines.size();
-      
+     
+	  totalNumberOfLines=lines.size();
 	  
 	  for (Node line : lines) {
     	lineNumber++;
       List<Node> words = XMLUtil.findTagsByName(line, "WORD");
-      //System.out.println("\tLine: " + words.size());
       int totalNumberOfWords=words.size();
       for (Node word : words) {
     	wordNumber++;
@@ -158,36 +165,81 @@ public class ExtractFeaturesBook {
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
         if(isMaybeNumber(text)) {
+            if(text.equals("1")) repeat1++;
+        	if(repeat1<=1 || !text.equals("1")){
           System.out.println("Candidate: "+text);
           PageNumberCandidate instance = new PageNumberCandidate(text, page);
           
           instance.setFeature("x-fraction", x / (double) page.width);
           instance.setFeature("y-fraction", y / (double) page.height);
           instance.setFeature("% thru line", (double)wordNumber/totalNumberOfWords);
-          instance.setFeature("% thru word", (double)lineNumber/totalNumberOfLines);
+          instance.setFeature("% thru page", (double)lineNumber/totalNumberOfLines);
 
           candidates.add(instance);
+        	}
         }
       }
+      wordNumber=0;
     }
+	 lineNumber=0;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Map<String, Integer> featureNumbers = new HashMap<>();
     featureNumbers.put("x-fraction", 1);
     featureNumbers.put("sequence", 2);
     featureNumbers.put("y-fraction", 3);
     featureNumbers.put("% thru line", 4);
-    featureNumbers.put("%  thru word", 5);
-
+    featureNumbers.put("%  thru page", 5);
     List<List<PageNumberCandidate>> extracted = extract("jack00shergoog_djvu.xml");
 
     // TODO: calculate sequence here and set it on all candidates.
-    boolean status=true;
-    for(int i=0;i<extracted.size();i++){
+    boolean statusBefore=false;
+    boolean statusAfter=false;
+    for(int i=0;i<extracted.size();i++){ //moving in per page
     	for(int j=0;j<extracted.get(i).size();j++){
+//moving in per token within the page
+    		if(i==0){
+    			for(int k=0;k<extracted.get(i+1).size();k++){
+        			if(Integer.parseInt(extracted.get(i).get(j).text.toString())==Integer.parseInt(extracted.get(i+1).get(k).text.toString())-1){
+        				statusBefore=true;
+        			}
+        		}
+    			if(statusBefore)
+    				extracted.get(i).get(j).setFeature("sequence", 1);
+    			else
+    				extracted.get(i).get(j).setFeature("sequence", 0);
+    		} else 
+    		if(i==extracted.size()-1){
+    			for(int k=0;k<extracted.get(i-1).size();k++){
+        			if(Integer.parseInt(extracted.get(i).get(j).text.toString())==Integer.parseInt(extracted.get(i-1).get(k).text.toString())+1){
+        				statusAfter=true;
+        			}
+        		}
+    			if(statusAfter)
+    				extracted.get(i).get(j).setFeature("sequence", 1);
+    			else
+    				extracted.get(i).get(j).setFeature("sequence", 0);
+    		} else{
     		
+    		
+    		
+    		for(int k=0;k<extracted.get(i-1).size();k++){
+    			if(Integer.parseInt(extracted.get(i).get(j).text.toString())==Integer.parseInt(extracted.get(i-1).get(k).text.toString())+1){
+    				statusBefore=true;
+    			}
+    		}
+    		for(int k=0;k<extracted.get(i+1).size();k++){
+    			if(Integer.parseInt(extracted.get(i).get(j).text.toString())==Integer.parseInt(extracted.get(i+1).get(k).text.toString())-1){
+    				statusAfter=true;
+    			}
+    		}
+    		if(statusBefore && statusAfter) extracted.get(i).get(j).setFeature("sequence", 1);
+    		else extracted.get(i).get(j).setFeature("sequence", 0);
+    		}
     	}
+    	statusBefore=false;
+    	statusAfter=false;
     	
     }
     
@@ -198,8 +250,10 @@ public class ExtractFeaturesBook {
         total++;
       }
     }
-    System.out.println("Extracted "+total+" candidates on "+extracted.size()+" pages.");
-
+    System.out.println("Extracted "+total+" candidates on "+extracted.size()+" pages" );
+    generateData TD=new generateData();
+    TD.generateTrainingData("truth_data/jack00-annotated.txt", extracted);
+    //TD.generateTestData(extracted);
 
   }
 }
