@@ -1,3 +1,9 @@
+blank 1
+blank 2
+blank 3
+blank 4
+blank 5
+blank 6
 4	7
 5	8
 blank	9

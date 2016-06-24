@@ -22,6 +22,8 @@ public class ExtractFeaturesBook {
 	 public static int wordNumber;
      public static int totalNumberOfLines;
      public static int repeat1=0;
+     public static int pageImageNumber=1;
+     
   public static class PageInfo {
     String book;
     int imageNumber;
@@ -107,6 +109,7 @@ public class ExtractFeaturesBook {
         if(underscore < 0) {
           throw new RuntimeException("Bad page information?: "+usemap+" "+attributes);
         }
+        pageImageNumber++;
         String bookId = usemap.substring(0, underscore);
         String imageNumberText = usemap.substring(underscore+1);
         int imageNumber = Integer.parseInt(imageNumberText);
@@ -167,7 +170,7 @@ public class ExtractFeaturesBook {
         if(isMaybeNumber(text)) {
             if(text.equals("1")) repeat1++;
         	if(repeat1<=1 || !text.equals("1")){
-          System.out.println("Candidate: "+text);
+         // System.out.println("Candidate: "+text);
           PageNumberCandidate instance = new PageNumberCandidate(text, page);
           
           instance.setFeature("x-fraction", x / (double) page.width);
@@ -191,8 +194,124 @@ public class ExtractFeaturesBook {
     featureNumbers.put("y-fraction", 3);
     featureNumbers.put("% thru line", 4);
     featureNumbers.put("%  thru page", 5);
-    List<List<PageNumberCandidate>> extracted = extract("jack00shergoog_djvu.xml");
-
+    
+   // List<List<PageNumberCandidate>> extracted = extract("raw_djvu/alibraryamerica05goog_djvu.xml");
+   /*
+    List<List<PageNumberCandidate>> extracted1 = extract("raw_djvu/anessayonperson00richgoog_djvu.xml");
+    List<List<PageNumberCandidate>> extracted2 = extract("raw_djvu/annualreporttown1998hopk_djvu.xml");
+    List<List<PageNumberCandidate>> extracted3 = extract("raw_djvu/belfry01sincgoog_djvu.xml");
+    List<List<PageNumberCandidate>> extracted4 = extract("raw_djvu/biennialretr1113stat_djvu.xml");
+    List<List<PageNumberCandidate>> extracted5 = extract("raw_djvu/bookofrevelation00lhot_djvu.xml");
+    List<List<PageNumberCandidate>> extracted6 = extract("raw_djvu/brownalumnimonth954brow_djvu.xml");
+    List<List<PageNumberCandidate>> extracted7 = extract("raw_djvu/cairngormmounta01burtgoog_djvu.xml");
+    List<List<PageNumberCandidate>> extracted8 = extract("raw_djvu/chemicalreports00grah_djvu.xml");
+    List<List<PageNumberCandidate>> extracted9 =extract("raw_djvu/classifiedbiblio01veal_djvu.xml");
+    List<List<PageNumberCandidate>> extracted10= extract("raw_djvu/cu31924021743095_djvu.xml");
+    
+    */
+    
+    List<List<PageNumberCandidate>> extracted11 = extract("raw_djvu/gunnartaleofnors00boyerich_djvu.xml");
+    List<List<PageNumberCandidate>> extracted12 = extract("raw_djvu/historicfurnishi00gras_djvu.xml");
+    List<List<PageNumberCandidate>> extracted13 = extract("raw_djvu/jack00shergoog_djvu copy.xml");
+    List<List<PageNumberCandidate>> extracted14 = extract("raw_djvu/johannladislavp01pyrkgoog_djvu.xml");
+    List<List<PageNumberCandidate>> extracted15 = extract("raw_djvu/leanticherimevol05danc_djvu.xml");
+    
+    
+    //calculateSequence(extracted);
+    /*
+    calculateSequence(extracted1);
+    calculateSequence(extracted2);
+    calculateSequence(extracted3);
+    calculateSequence(extracted4);
+    calculateSequence(extracted5);
+    calculateSequence(extracted6);
+    calculateSequence(extracted7);
+    calculateSequence(extracted8);
+    calculateSequence(extracted9);
+    calculateSequence(extracted10);
+    
+    */
+    
+    calculateSequence(extracted11);
+    calculateSequence(extracted12);
+    calculateSequence(extracted13);
+    calculateSequence(extracted14);
+    calculateSequence(extracted15);
+    
+    
+    /*
+    int total = 0;
+    for (List<PageNumberCandidate> pageNumberCandidates : extracted) {
+      for (PageNumberCandidate candidate : pageNumberCandidates) {
+        total++;
+      }
+    }
+    */
+    //System.out.println("Extracted "+total+" candidates on "+extracted.size()+" pages" );
+    generateData TD=new generateData();
+    /*
+    TD.generateTestData(extracted15);
+    TD.generateTestData(extracted14);
+    TD.generateTestData(extracted13);
+    TD.generateTestData(extracted12);
+    TD.generateTestData(extracted11);
+    
+    */
+   
+  
+    
+   // TD.generateTrainingData("truth_data/alibra-annotated.txt", extracted);
+    /*
+    TD.generateTrainingData("truth_data/anessa-annotated.txt", extracted1);
+    TD.generateRankData(extracted1);
+    TD.generateTrainingData("truth_data/annual-annotated.txt", extracted2);
+    TD.generateRankData(extracted2);
+    TD.generateTrainingData("truth_data/belfry-annotated.txt", extracted3);
+    TD.generateRankData(extracted3);
+    TD.generateTrainingData("truth_data/bienni-annotated.txt", extracted4);
+    TD.generateRankData(extracted4);
+    TD.generateTrainingData("truth_data/bookof-annotated.txt", extracted5);
+    TD.generateRankData(extracted5);
+    TD.generateTrainingData("truth_data/browna-annotated.txt", extracted6);
+    TD.generateRankData(extracted6);
+    TD.generateTrainingData("truth_data/cairng-annotated.txt", extracted7);
+    TD.generateRankData(extracted7);
+    TD.generateTrainingData("truth_data/chemic-annotated.txt", extracted8);
+    TD.generateRankData(extracted8);
+    TD.generateTrainingData("truth_data/classi-annotated.txt", extracted9);
+    TD.generateRankData(extracted9);
+    TD.generateTrainingData("truth_data/cu3192-annotated.txt", extracted10);
+    TD.generateRankData(extracted10);
+    
+   */
+    
+    
+    TD.generateTrainingData("truth_data/gunnar-annotated.txt", extracted11);
+    TD.generateRankData(extracted11);
+    TD.generateTrainingData("truth_data/histor-annotated.txt", extracted12);
+    TD.generateRankData(extracted12);
+    TD.generateTrainingData("truth_data/jack00-annotated.txt", extracted13);
+    TD.generateRankData(extracted13);
+    TD.generateTrainingData("truth_data/johann-annotated.txt", extracted14);
+    TD.generateRankData(extracted14);
+    TD.generateTrainingData("truth_data/leanti-annotated.txt", extracted15);
+    TD.generateRankData(extracted15);
+    
+   
+  TD.sortRankPredictions("SVM_files/rankPredictions.txt", "SVM_files/rankTestData.txt", "SVM_files/query_ids.txt" );
+   
+    
+    
+    
+    
+  
+   
+  
+   // TD.accuracyofTest();
+    
+     
+  }
+    public static void calculateSequence(List<List<PageNumberCandidate>> extracted){
     // TODO: calculate sequence here and set it on all candidates.
     boolean statusBefore=false;
     boolean statusAfter=false;
@@ -222,6 +341,7 @@ public class ExtractFeaturesBook {
     				extracted.get(i).get(j).setFeature("sequence", 0);
     		} else{
     		
+    			
     		
     		
     		for(int k=0;k<extracted.get(i-1).size();k++){
@@ -234,8 +354,10 @@ public class ExtractFeaturesBook {
     				statusAfter=true;
     			}
     		}
-    		if(statusBefore && statusAfter) extracted.get(i).get(j).setFeature("sequence", 1);
-    		else extracted.get(i).get(j).setFeature("sequence", 0);
+    		if(statusBefore && statusAfter) {extracted.get(i).get(j).setFeature("sequence", 1);
+    		//System.out.println(extracted.get(i).get(j).text);
+    		}
+    		else {extracted.get(i).get(j).setFeature("sequence", 0);}
     		}
     	}
     	statusBefore=false;
@@ -243,17 +365,10 @@ public class ExtractFeaturesBook {
     	
     }
     
-    
-    int total = 0;
-    for (List<PageNumberCandidate> pageNumberCandidates : extracted) {
-      for (PageNumberCandidate candidate : pageNumberCandidates) {
-        total++;
-      }
     }
-    System.out.println("Extracted "+total+" candidates on "+extracted.size()+" pages" );
-    generateData TD=new generateData();
-    TD.generateTrainingData("truth_data/jack00-annotated.txt", extracted);
-    //TD.generateTestData(extracted);
-
-  }
+   
+    
+    
+    
+  
 }
