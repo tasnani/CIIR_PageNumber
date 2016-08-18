@@ -10,7 +10,6 @@ import pagenumber.Forward;
 public class Viterbi {
 static Forward f=new Forward();
 static ArrayList<ArrayList<Double>> viterbiPages=new ArrayList<ArrayList<Double>>();
-static ArrayList<ArrayList<ViterbiCandidate>> backpointer;
 static ArrayList<ArrayList<ViterbiCandidate>> book;
 static ArrayList<ArrayList<Double>> forward;
 ArrayList<ArrayList<Double>> transitionProbabilities;
@@ -22,7 +21,7 @@ public Viterbi(ArrayList<ArrayList<Double>> forward, ArrayList<ArrayList<Viterbi
 	for(int pages=0;pages<3;pages++){
 		viterbiPages.add(pages, new ArrayList<Double>());
 		for(int candidate=0;candidate<3;candidate++){
-			viterbiPages.get(pages).add(candidate,0.0);
+			viterbiPages.get(pages).add(candidate,1.0);
 			
 		}
 	}
@@ -35,23 +34,23 @@ public Viterbi(ArrayList<ArrayList<Double>> forward, ArrayList<ArrayList<Viterbi
 
 public static Double findMAX(int page, int candidate, int lowerBound, int upperBound, ArrayList<ArrayList<Double>> viterbiPages){
 	Double maximum=0.0;
-	int realPage=page;
+	int realPage=0;
+	if(page==book.size()) {realPage=page-1;} else 
+	 {realPage=page;}
 	for(int i=lowerBound;i<upperBound;i++){
-		if(page==book.size()) realPage=page-1;
-		Double newValue=viterbiPages.get(page-1).get(i) * f.calculateTransitionProbabilities(book.get(realPage).get(i),book.get(realPage).get(candidate));
+		
+		Double newValue=viterbiPages.get(realPage).get(i) * f.calculateTransitionProbabilities(book.get(realPage).get(i),book.get(realPage).get(candidate));
+		
 		if(newValue>maximum){
 			maximum=newValue;
 		}
 	}
+	System.out.println(maximum);
 	return maximum;
 }
 
 public static void doViterbi(){
- for(int candidate=0;candidate<book.get(0).size();candidate++){
-	forward.get(0).set(candidate, f.calculateTransitionProbabilities(book.get(0).get(0), book.get(0).get(candidate))* 
-			rankedScores.get(0).get(candidate));
-	
- }
+ 
  for(int page=1;page<book.size();page++){
 	 for(int candidate=0;candidate<book.get(page).size();candidate++){
 		 viterbiPages.get(page).set(candidate, findMAX(page,candidate,1,book.get(page).size(), viterbiPages));
