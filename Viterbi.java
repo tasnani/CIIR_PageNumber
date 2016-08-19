@@ -10,14 +10,17 @@ import pagenumber.Forward;
 public class Viterbi {
 static Forward f=new Forward();
 static HashMap<Integer,ArrayList<Double>> viterbiPages=new HashMap<Integer,ArrayList<Double>>();
-static HashMap<Integer,ArrayList<ViterbiCandidate>> book;
+static HashMap<Integer,ArrayList<ViterbiCandidate>> book=new HashMap<Integer,ArrayList<ViterbiCandidate>>();
 static HashMap<Integer,ArrayList<Double>> forward;
 ArrayList<ArrayList<Double>> transitionProbabilities;
-static HashMap<Integer,ArrayList<Double>> rankedScores;
-public Viterbi(HashMap<Integer,ArrayList<ViterbiCandidate>>  book,HashMap<Integer,ArrayList<Double>> rankedScores){
+static HashMap<Integer,ArrayList<Double>> rankedScores=new HashMap<Integer,ArrayList<Double>>();
+ArrayList<ViterbiCandidate> page1=new ArrayList<ViterbiCandidate>();
+ArrayList<ViterbiCandidate> page2=new ArrayList<ViterbiCandidate>();
+ArrayList<ViterbiCandidate> page3=new ArrayList<ViterbiCandidate>();
+
+public Viterbi(){
 	
-	this.book=book;
-	this.rankedScores=rankedScores;
+	
 	
 	for(int pages=0;pages<3;pages++){
 		viterbiPages.put(pages, new ArrayList<Double>());
@@ -31,7 +34,50 @@ public Viterbi(HashMap<Integer,ArrayList<ViterbiCandidate>>  book,HashMap<Intege
 }
 
 
-
+public void initialize(){
+	page1.add(0,new ViterbiCandidate("1",0,0.9));
+	page1.add(1,new ViterbiCandidate("e",0,0.7));
+	page1.add(2,new ViterbiCandidate("k",0,0.4));
+	page2.add(0,new ViterbiCandidate("f",1,0.701));
+	page2.add(1,new ViterbiCandidate("2",1,0.700));
+	page2.add(2,new ViterbiCandidate("c",1,0.3));
+	page3.add(0,new ViterbiCandidate("3",2,0.85));
+	page3.add(1,new ViterbiCandidate("p",2,0.849));
+	page3.add(2,new ViterbiCandidate("err",2,0.01));
+	
+	
+	
+	book.put(0, page1);
+	book.put(1, page2);
+	book.put(2, page3);
+	
+	/*
+ 	allCandidates.add(0,new ViterbiCandidate("1",0,0.9));
+	allCandidates.add(1,new ViterbiCandidate("f",1,0.5));
+	allCandidates.add(2,new ViterbiCandidate("3",2,0.9));
+	
+	allCandidates.add(3,new ViterbiCandidate("e",0,0.4));
+	allCandidates.add(4,new ViterbiCandidate("2",1,0.7));
+	allCandidates.add(5,new ViterbiCandidate("err",2,0.2));
+	
+	
+	allCandidates.add(6,new ViterbiCandidate("k",0,0.3));
+	allCandidates.add(7,new ViterbiCandidate("c",1,0.3));
+	allCandidates.add(8,new ViterbiCandidate("p",2,0.3));
+	*/
+	int index=0;
+	for(int i=0;i<book.size();i++){
+		rankedScores.put(i,  new ArrayList<Double>());
+		
+	      for(int j=0;j<book.get(i).size();j++){
+	    	  rankedScores.get(i).add(j, book.get(i).get(j).rankedScores);
+	    	
+	    	  
+	      }
+			
+		}
+	}
+	
 
 public static Double findMAX(int page, int candidate, int lowerBound, int upperBound, HashMap<Integer,ArrayList<Double>> viterbiPages){
 	Double maximum=0.0;
@@ -51,6 +97,7 @@ public static Double findMAX(int page, int candidate, int lowerBound, int upperB
 }
 
 public static void doViterbi(){
+	
 	for(int candidate=0;candidate<book.get(0).size();candidate++){
 		viterbiPages.get(0).set(candidate, f.calculateTransitionProbabilities(book.get(0).get(0),book.get(0).get(candidate))* rankedScores.get(0).get(candidate));
 	}
@@ -63,7 +110,7 @@ public static void doViterbi(){
  }
  int lastPage=book.size()-1;
  int lastCandidate=book.get(lastPage).size()-1;
- viterbiPages.get(lastPage).set(lastCandidate, findMAX(lastPage+1, lastCandidate,0,book.get(lastPage).size(),viterbiPages));
+   viterbiPages.get(lastPage).set(lastCandidate, findMAX(lastPage+1, lastCandidate,0,book.get(lastPage).size(),viterbiPages));
    for(int page=0;page<book.size();page++){
 	   System.out.println(book.get(page).get(findMaxArg(0,book.get(page).size(),page)).text);
    }
@@ -89,12 +136,12 @@ public static int findMaxArg(int upperBound, int lowerBound, int page){
 public static void main(String args[]){
 	 
 	
-	f.initialize();
-	book=f.returnBook();
-	rankedScores=f.rankedScoresHashMap;
 	
 	
-	Viterbi v=new Viterbi(book,rankedScores);
+	
+	
+	Viterbi v=new Viterbi();
+	v.initialize();
 	v.doViterbi();
 	
 	/* TODO
