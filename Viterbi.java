@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -47,11 +48,13 @@ public Viterbi(){
 public static class ViterbiCandidate{
 	String text;
 	int page;
-	static double rankedScores;
-	public ViterbiCandidate(String t, int p, double score){
+	 double rankedScores;
+	 int rank;
+	public ViterbiCandidate(String t, int p, double score,int rank){
 		this.text=t;
 		this.page=p;
 		this.rankedScores=score;
+		this.rank=rank;
 	}
 }
 
@@ -90,66 +93,26 @@ public static void initialize() throws IOException{
 		}
 		
 		
-	  allBooks.get(actualNameOfBook).get(actualPageImage).add(new ViterbiCandidate(candidateText,pageImage,Double.parseDouble(rankedScoreValue)));
+	  allBooks.get(actualNameOfBook).get(actualPageImage).add(new ViterbiCandidate(candidateText,pageImage,Double.parseDouble(rankedScoreValue),0));
 	  rankedScoreValue=BR.readLine();
 	  line=BR2.readLine();	
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	page1.add(0,new ViterbiCandidate("1",0,0.9));
-	page1.add(1,new ViterbiCandidate("e",0,0.7));
-	page1.add(2,new ViterbiCandidate("k",0,0.4));
-	page2.add(0,new ViterbiCandidate("f",1,0.701));
-	page2.add(1,new ViterbiCandidate("2",1,0.700));
-	page2.add(2,new ViterbiCandidate("c",1,0.3));
-	page3.add(0,new ViterbiCandidate("3",2,0.85));
-	page3.add(1,new ViterbiCandidate("p",2,0.849));
-	page3.add(2,new ViterbiCandidate("err",2,0.01));
-	
-	
-	
-	book.put(0, page1);
-	book.put(1, page2);
-	book.put(2, page3);
-	
-	/*
- 	allCandidates.add(0,new ViterbiCandidate("1",0,0.9));
-	allCandidates.add(1,new ViterbiCandidate("f",1,0.5));
-	allCandidates.add(2,new ViterbiCandidate("3",2,0.9));
-	
-	allCandidates.add(3,new ViterbiCandidate("e",0,0.4));
-	allCandidates.add(4,new ViterbiCandidate("2",1,0.7));
-	allCandidates.add(5,new ViterbiCandidate("err",2,0.2));
-	
-	
-	allCandidates.add(6,new ViterbiCandidate("k",0,0.3));
-	allCandidates.add(7,new ViterbiCandidate("c",1,0.3));
-	allCandidates.add(8,new ViterbiCandidate("p",2,0.3));
-	*/
-	
-	/*nt index=0;
-	for(int i=0;i<book.size();i++){
-		rankedScoresMap.put(i,  new ArrayList<Double>());
-		
-	      for(int j=0;j<book.get(i).size();j++){
-	    	  rankedScoresMap.get(i).add(j, book.get(i).get(j).rankedScores);
-	    	
-	    	  
-	      }
-	      Collections.sort(rankedScoresMap.get(i));
-			
+	for(int bookName=0;bookName<listOfBookNames.size();bookName++){
+		for(int page=0;page<allBooks.get(listOfBookNames.get(bookName)).size();page++){
+			Integer[] keySet = new Integer[allBooks.get(listOfBookNames.get(bookName)).size()];
+			keySet = allBooks.get(listOfBookNames.get(bookName)).keySet().toArray(keySet);
+			Collections.sort(allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]), new Comparator <ViterbiCandidate>(){
+				public int compare (ViterbiCandidate c1, ViterbiCandidate c2){
+					if(c1.rankedScores == c2.rankedScores) return 0;
+					return c1.rankedScores <c2.rankedScores ? -1 : 1;
+				}
+			});
+			for(int candidate=0;candidate<allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]).size();candidate++){
+				allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]).get(candidate).rank = candidate+1;
+			}
 		}
-	*/
+	}
 	}
 	
 
@@ -203,7 +166,8 @@ public static void doViterbi(HashMap<Integer,ArrayList<ViterbiCandidate>> book){
  int lastCandidate=book.get(keySet[lastPage]).size()-1;
    viterbiPages.get(keySet[lastPage]).set(lastCandidate, findMAX(lastPage+1, lastCandidate,0,book.get(keySet[lastPage]).size(),viterbiPages));
    for(int page=0;page<book.keySet().size();page++){
-	   System.out.print(" " +book.get(keySet[page]).get(findMaxArg(0,book.get(keySet[page]).size(),keySet[page])).text);
+	   int maxCandidate = findMaxArg(0,book.get(keySet[page]).size(),keySet[page]);
+	   System.out.print(" " +book.get(keySet[page]).get(maxCandidate).text +" [Rank: "+book.get(keySet[page]).get(maxCandidate).rank+"]");
    }
    viterbiPages.clear();
  
@@ -237,8 +201,6 @@ public static void main(String args[]) throws IOException{
 	/* TODO
 	 * Research new function that calculates transition probabilities.
 	 * Normalize all probabilities from 0 to 1.
-	 * Incorporate real data here
-	 * -ranked scores gotten
 	 */
 	
    
