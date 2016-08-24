@@ -29,6 +29,7 @@ public class Viterbi {
 	static ArrayList<String> listOfBookNames = new ArrayList<String>();
 	static Integer[] keySet;
 	int numberOfBlanks=0;
+	static ViterbiCandidate blankCandidate;
 
 	public Viterbi() {
 
@@ -63,17 +64,22 @@ public class Viterbi {
 
 		String line = BR2.readLine();
 		String rankedScoreValue = BR.readLine();
-		String actualNameOfBook = line.substring(line.lastIndexOf(',') + 1, line.length());
-		Integer actualPageImage = Integer.parseInt(line.substring(line.indexOf('#') + 1, line.indexOf(',')));
+		String actualNameOfBook = line.substring(line.lastIndexOf(',') + 1, line.length()).trim();
+		Integer actualPageImage = Integer.parseInt(line.substring(line.indexOf('#') + 1, line.indexOf(',')).trim());
 		allBooks.put(actualNameOfBook, new HashMap<Integer, ArrayList<ViterbiCandidate>>());
 		allBooks.get(actualNameOfBook).put(actualPageImage, new ArrayList<ViterbiCandidate>());
-	
+		String candidateText = line.substring(line.indexOf(',') + 1, line.lastIndexOf(',')).trim();
+		allBooks.get(actualNameOfBook).get(actualPageImage)
+		.add(new ViterbiCandidate(candidateText, actualPageImage, Double.parseDouble(rankedScoreValue), 0));
+		blankCandidate = new ViterbiCandidate("blank",actualPageImage,0.01,0);
+	   allBooks.get(actualNameOfBook).get(actualPageImage).add(blankCandidate);
 
 		listOfBookNames.add(actualNameOfBook);
 		while (line != null) {
 			Integer pageImage = Integer.parseInt(line.substring(line.indexOf('#') + 1, line.indexOf(',')));
-			String candidateText = line.substring(line.indexOf(',') + 1, line.lastIndexOf(','));
-			String nameOfBook = line.substring(line.lastIndexOf(',') + 1, line.length());
+			candidateText = line.substring(line.indexOf(',') + 1, line.lastIndexOf(',')).trim();
+			String nameOfBook = line.substring(line.lastIndexOf(',') + 1, line.length()).trim();
+			
 			if (allBooks.containsKey(nameOfBook) == false) {
 				allBooks.put(nameOfBook, new HashMap<Integer, ArrayList<ViterbiCandidate>>());
 				actualNameOfBook = nameOfBook;
@@ -82,6 +88,7 @@ public class Viterbi {
 			if (allBooks.get(actualNameOfBook).containsKey(pageImage) == false) {
 				allBooks.get(nameOfBook).put(pageImage, new ArrayList<ViterbiCandidate>());
 				actualPageImage = pageImage;
+			    allBooks.get(actualNameOfBook).get(actualPageImage).add(blankCandidate);
 				
 			}
 
@@ -93,9 +100,10 @@ public class Viterbi {
 		}
 	
 		for (int bookName = 0; bookName < listOfBookNames.size(); bookName++) {
-			for (int page = 0; page < allBooks.get(listOfBookNames.get(bookName)).size(); page++) {
-				Integer[] keySet = new Integer[allBooks.get(listOfBookNames.get(bookName)).keySet().size()];
-				keySet = allBooks.get(listOfBookNames.get(bookName)).keySet().toArray(keySet);
+			Integer[] keySet = new Integer[allBooks.get(listOfBookNames.get(bookName)).keySet().size()];
+			keySet = allBooks.get(listOfBookNames.get(bookName)).keySet().toArray(keySet);
+			
+			for (int page = 0; page < keySet.length; page++) {
 				Collections.sort(allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]),
 						new Comparator<ViterbiCandidate>() {
 							public int compare(ViterbiCandidate c1, ViterbiCandidate c2) {
@@ -108,8 +116,7 @@ public class Viterbi {
 						.size(); candidate++) {
 					allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]).get(candidate).rank = candidate + 1;
 				}
-				ViterbiCandidate blankCandidate = new ViterbiCandidate("blank",page,2.0,0);
-				allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]).add(blankCandidate);
+				
                 
                 
 			}
@@ -119,17 +126,18 @@ public class Viterbi {
 	
 	
 	public static Double findMAX(Integer page, int candidate, int lowerBound, int upperBound,
-			HashMap<Integer, ArrayList<Double>> viterbiPages) {
+			HashMap<Integer, ArrayList<Double>> viterbiPages, HashMap<Integer, ArrayList<ViterbiCandidate>> book ) {
 		Double maximum = 0.0;
 		Integer realPage = 0;
-		if (page == keySet.length) {
-			realPage = page - 1;
-		} else {
+		
+			
 			realPage = page;
-		}
+			
+		
 		for (int i = lowerBound; i < upperBound; i++) {
 
 			try {
+				
 				Double newValue = viterbiPages.get(realPage).get(i)
 						* calculateTransitionProbabilities(book.get(realPage).get(i), book.get(realPage).get(candidate))
 						* rankedScoresMap.get(realPage).get(candidate);
@@ -138,13 +146,27 @@ public class Viterbi {
 					maximum = newValue;
 				}
 			} catch (NullPointerException NE) {
-				return 0.0;
+				if(page == keySet.length) System.out.println("It was the last page" +page);
+				System.out.println(realPage);
+				
+				System.out.println(book.get(realPage).get(i));
+				System.err.println(i+"\t"+page+"\t"+candidate+"\t"+lowerBound+"\t"+upperBound);
+				
+			    
 			}
+		   catch(IndexOutOfBoundsException IE){
+			 
+			   System.out.println(upperBound + "\t" + i +"\t"+ realPage + "\t"+ book.get(realPage).size());
+			   if(page == keySet.length) System.out.println("It was the last page");
 		}
-
+			
+		}
+    
 		return maximum;
 	}
+	
 	public static void loadNormalizedRankedScores(Integer[] keySet,HashMap<Integer,ArrayList<ViterbiCandidate>> book,HashMap<Integer,ArrayList<Double>> rankedScoresMap){
+		
 		Double minimumScore = 1000000.0;
 	    Double maximumScore = -1000000.0;
 		for(int page=0;page<keySet.length;page++){
@@ -154,15 +176,21 @@ public class Viterbi {
 				if(rankedScoreValue > maximumScore) maximumScore = rankedScoreValue;
 				
 			}
+			
+			
 		}
 		
 		for(int page=0;page<keySet.length;page++){
 			for(int candidate=0;candidate<book.get(keySet[page]).size();candidate++){
-				rankedScoresMap.get(keySet[page]).set(candidate, (book.get(keySet[page]).get(candidate).rankedScores - minimumScore)/(maximumScore-minimumScore));
-				
-				
+				if(book.get(keySet[page]).get(candidate)==blankCandidate) {
+				//System.out.println("Found a blank candidate");
+				rankedScoresMap.get(keySet[page]).set(candidate, 0.35 );
+				} else{ 
+				rankedScoresMap.get(keySet[page]).set(candidate, (book.get(keySet[page]).
+				get(candidate).rankedScores - minimumScore)/(maximumScore-minimumScore));}
 				//System.out.print(" "+rankedScoresMap.get(keySet[page]).get(candidate));
 			}
+			
 		}
 		//System.out.println();
 	}
@@ -173,7 +201,7 @@ public class Viterbi {
 		for (int i = 0; i < keySet.length; i++) {
 			viterbiPages.put(keySet[i], new ArrayList<Double>());
 			rankedScoresMap.put(keySet[i], new ArrayList<Double>());
-			for (int k = 0; k < book.get(keySet[i]).size(); k++) {
+			for (int k = 0; k < book.get(keySet[i]).size() +1; k++) {
 				viterbiPages.get(keySet[i]).add(k, 1.0);
 				rankedScoresMap.get(keySet[i]).add(k, 1.0);
 			}
@@ -188,20 +216,26 @@ public class Viterbi {
 							* rankedScoresMap.get(keySet[0]).get(candidate));
 		}
 
-		for (int page = 1; page < book.keySet().size(); page++) {
+		for (int page = 1; page <= book.keySet().size() -1; page++) {
 			for (int candidate = 0; candidate < book.get(keySet[page]).size(); candidate++) {
 
 				viterbiPages.get(keySet[page]).set(candidate,
-						findMAX(keySet[page], candidate, 0, book.get(keySet[page]).size(), viterbiPages));
+						findMAX(keySet[page], candidate, 0, book.get(keySet[page]).size(), viterbiPages,book));
 			}
 		}
 		int lastPage = keySet.length - 1;
+		int addedlastPage = lastPage +1;
 		int lastCandidate = book.get(keySet[lastPage]).size() - 1;
-		viterbiPages.get(keySet[lastPage]).set(lastCandidate,
-				findMAX(lastPage + 1, lastCandidate, 0, book.get(keySet[lastPage]).size(), viterbiPages));
+		for (int candidate = 0; candidate < book.get(keySet[lastPage]).size(); candidate++) {
+			
+			viterbiPages.get(keySet[lastPage]).set(lastCandidate,
+					calculateTransitionProbabilities(book.get(keySet[lastPage]).get(lastCandidate), book.get(keySet[lastPage]).get(candidate))
+							* rankedScoresMap.get(keySet[lastPage]).get(candidate));
+		}
+		
 		for (int page = 0; page < book.keySet().size(); page++) {
 			int maxCandidate = findMaxArg(0, book.get(keySet[page]).size(), keySet[page]);
-			System.out.print(" " + book.get(keySet[page]).get(maxCandidate).text);
+			System.out.print(" " + book.get(keySet[page]).get(maxCandidate).text + "[Rank: "+ book.get(keySet[page]).get(maxCandidate).rank + "]" );
 		}
 		
 		//"[Rank: "+ book.get(keySet[page]).get(maxCandidate).rank + "]"
