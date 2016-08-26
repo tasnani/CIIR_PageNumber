@@ -107,9 +107,7 @@ public class Viterbi {
 				Collections.sort(allBooks.get(listOfBookNames.get(bookName)).get(keySet[page]),
 						new Comparator<ViterbiCandidate>() {
 							public int compare(ViterbiCandidate c1, ViterbiCandidate c2) {
-								if (c1.rankedScores == c2.rankedScores)
-									return 0;
-								return c1.rankedScores < c2.rankedScores ? -1 : 1;
+								return -Double.compare(c1.rankedScores, c2.rankedScores);
 							}
 						});
 				//assign new rank to each candidate after being sorted. 
@@ -225,7 +223,7 @@ public class Viterbi {
 		
 		for (int page = 0; page < book.keySet().size(); page++) {
 			int maxCandidate = findMaxArg(book.get(keySet[page]).size(), 0,keySet[page]);
-			System.out.print(" " + book.get(keySet[page]).get(maxCandidate).text );
+			System.out.print(" " + book.get(keySet[page]).get(maxCandidate).text + "[R: "+ book.get(keySet[page]).get(maxCandidate).rank + "]" );
 		}
 		
 		//"[Rank: "+ book.get(keySet[page]).get(maxCandidate).rank + "]"
