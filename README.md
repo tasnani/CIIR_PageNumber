@@ -27,7 +27,7 @@ The next step was to introduce ranking to the algorithm. Ranking would enable th
 by assigning a overall score of how much a test word is a page number. This produced one best likely output per page.
 
 Currently, when extraction accuracy is high(right page numbers extracted/ total number of possible page numbers is almost equal) many pages will not be accounted for 
-because of the damaged states of books. The algorithm can't return something that isn't there. A prediction mechanism needs to be 
+because of the damaged states of books. The algorithm can't return a page number that isn't there. A prediction mechanism needs to be 
 created so that missing pages are accounted for, repeated pages are readjusted and all are stitched correctly with correctly extracted page numbers
 to form a corrected page sequence regardless of the condition of the book. 
 
