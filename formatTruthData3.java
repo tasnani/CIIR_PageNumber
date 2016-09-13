@@ -16,7 +16,7 @@ public class formatTruthData3 {
 	ArrayList<String> pageImageNumber=new ArrayList<String>();
 	public void openFile() throws IOException{
 	
-		file="truth_data/johann-annotated.txt";
+		file="truth_data/leanti-annotated.txt";
 		
 		   BufferedReader BR=new BufferedReader(new FileReader(file));
 			
@@ -28,7 +28,7 @@ public class formatTruthData3 {
 						c++;
 					}	
 					c=0;
-					
+					System.out.println(temp[0]);
 					actualPageNumber.add(temp[0]);
 					pageImageNumber.add(temp[1]);
 					
@@ -571,7 +571,7 @@ public class formatTruthData3 {
 	
 		formatTruthData3 f=new formatTruthData3();
 		f.openFile();
-		f.filter();
-		f.uniqueExpand();
+		//f.filter();
+		//f.uniqueExpand();
 	}
 }

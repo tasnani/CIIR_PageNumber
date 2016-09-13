@@ -33,11 +33,11 @@ public void initialize(){
 	page1.add(0,new ViterbiCandidate("1",0,0.9));
 	page1.add(1,new ViterbiCandidate("e",0,0.7));
 	page1.add(2,new ViterbiCandidate("k",0,0.4));
-	page2.add(0,new ViterbiCandidate("f",1,0.700));
-	page2.add(1,new ViterbiCandidate("2",1,0.782));
+	page2.add(0,new ViterbiCandidate("f",1,0.701));
+	page2.add(1,new ViterbiCandidate("2",1,0.700));
 	page2.add(2,new ViterbiCandidate("c",1,0.3));
 	page3.add(0,new ViterbiCandidate("3",2,0.85));
-	page3.add(1,new ViterbiCandidate("p",2,0.6));
+	page3.add(1,new ViterbiCandidate("p",2,0.849));
 	page3.add(2,new ViterbiCandidate("err",2,0.01));
 	
 	

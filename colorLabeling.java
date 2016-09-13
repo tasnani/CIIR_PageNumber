@@ -1,4 +1,4 @@
-package pagenumber.CIIR_PageNumber;
+package pagenumber;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

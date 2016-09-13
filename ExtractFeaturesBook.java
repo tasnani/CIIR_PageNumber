@@ -328,7 +328,7 @@ public class ExtractFeaturesBook {
    
     List<List<PageNumberCandidate>> extracted11 = extract("raw_djvu/gunnartaleofnors00boyerich_djvu.xml");
     List<List<PageNumberCandidate>> extracted12 = extract("raw_djvu/historicfurnishi00gras_djvu.xml");
-    List<List<PageNumberCandidate>> extracted13 = extract("raw_djvu/jack00shergoog_djvu copy.xml");
+    List<List<PageNumberCandidate>> extracted13 = extract("raw_djvu/jack00shergoog_djvu.xml");
     List<List<PageNumberCandidate>> extracted14 = extract("raw_djvu/johannladislavp01pyrkgoog_djvu.xml");
    
    // List<List<PageNumberCandidate>> extracted15 = extract("raw_djvu/leanticherimevol05danc_djvu.xml");

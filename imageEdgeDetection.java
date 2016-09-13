@@ -8,6 +8,7 @@ import java.awt.*;
 
 
 
+
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
@@ -38,7 +39,7 @@ public class imageEdgeDetection extends Component{
 		f = new JFrame("Loaded image");
 		f.setSize(1000, 1000);
 		 f.setBackground(Color.BLACK);
-		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/text2.png"));
+		inputSourceImage=ImageIO.read(new File("/Users/tanasn/Desktop/slide13.jpg"));
       
 		f.add(new JLabel(new ImageIcon(inputSourceImage)));
 		

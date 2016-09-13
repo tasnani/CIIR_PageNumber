@@ -148,9 +148,7 @@ ArrayList<String> truthArray=new ArrayList<String>();
 	    wrong=0;
 	    ArrayList<String> rankArray=new ArrayList<String>();
 		
-	    //System.out.println("Size of correct examples in test data:"+correctExamplesInTestData.size());
-		//ArrayList<String> finalrankArray=new ArrayList<String>();
-	   // System.out.println("size of truth array"+truthArray.size());
+	   
 		for(String s: truthArray){
 	    	if(s.charAt(0)=='+'){
 	    		s="2"+s.substring(2,s.length());
@@ -170,9 +168,7 @@ ArrayList<String> truthArray=new ArrayList<String>();
 	    	//System.out.println(s);
 	    }
 		for(int i=0;i<=rankArray.size()-2;i++){
-			//String current=rankArray.get(0);
-			//System.out.println(QID);
-			//System.out.println(rankArray.get(i));
+			
 			QIDS.add(QID+"");
 			qidOutput.println(QID);
 			rankArray.set(i, rankArray.get(i).charAt(0)+" qid:"+QID+" "+rankArray.get(i).substring(2,rankArray.get(i).length()));
@@ -181,7 +177,7 @@ ArrayList<String> truthArray=new ArrayList<String>();
 					indexOf('#')+1, rankArray.get(i+1).indexOf(',')))){
 				QID++;
 			}
-			//System.out.println(rankArray.get(i));
+			
 			output.println(rankArray.get(i));
 			
 			total++;
@@ -235,8 +231,10 @@ ArrayList<String> truthArray=new ArrayList<String>();
 		readAllLines(testDataFile, testRankData,preferenceRank);
 		loadQIDs(queryIDFile, QIDS);
 		
+		
+		
 		System.out.println("Start: "+QIDS.size()+"\t"+ testRankData.size()+"\t"+rankedScores.size()+"\t"+preferenceRank.size());
-		//System.out.println("Start: "+QIDS.get(0)+"\t"+ testRankData.get(0)+"\t"+rankedScores.get(0)+"\t"+preferenceRank.get(0));
+		
 		
 		
 		ArrayList<PageNumberPrediction> all_data = new ArrayList<PageNumberPrediction>();
