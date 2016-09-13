@@ -27,7 +27,9 @@ public class Viterbi {
 	static ArrayList<ViterbiCandidate> page3 = new ArrayList<ViterbiCandidate>();
 	static HashMap<String, HashMap<Integer, ArrayList<ViterbiCandidate>>> allBooks;
 	static ArrayList<String> listOfBookNames = new ArrayList<String>();
-	static Integer[] keySet;
+    static HashMap<String,String> viterbiOutput = new HashMap<String,String>();
+ 	static Integer[] keySet;
+ 	
 	int numberOfBlanks=0;
 	
 
@@ -141,11 +143,6 @@ public class Viterbi {
 				}
 			} catch (NullPointerException NE) {
 				System.err.println(i+"\t"+page+"\t"+candidate+"\t"+lowerBound+"\t"+upperBound +"\t"+book.get(keySet[page-1]).size());
-				System.out.println(viterbiPages.get(keySet[page-1]).get(i));
-				System.out.println(book.get(keySet[page-1]).get(i));
-				System.out.println(book.get(keySet[page]).get(candidate));
-				System.out.println(rankedScoresMap.get(keySet[page]).get(candidate));
-				if(page == keySet.length) System.out.println("It was the last page" +page);  
 			}
 		  
 			
@@ -184,9 +181,10 @@ public class Viterbi {
 		//System.out.println();
 	}
 	//initialize the ranked scores hashmap and viterbi data structure 
-	public static void doViterbi(HashMap<Integer, ArrayList<ViterbiCandidate>> book) {
-	
+	public static void doViterbi(HashMap<Integer, ArrayList<ViterbiCandidate>> book, String bookName) {
+	    String viterbiAnswer = "";
 		keySet = new Integer[book.keySet().size()];
+	    
 		book.keySet().toArray(keySet);
 		for (int i = 0; i < keySet.length; i++) {
 			viterbiPages.put(keySet[i], new ArrayList<Double>());
@@ -223,13 +221,17 @@ public class Viterbi {
 		
 		for (int page = 0; page < book.keySet().size(); page++) {
 			int maxCandidate = findMaxArg(book.get(keySet[page]).size(), 0,keySet[page]);
-			System.out.print(" " + book.get(keySet[page]).get(maxCandidate).text + "[R: "+ book.get(keySet[page]).get(maxCandidate).rank + "]" );
+			viterbiAnswer = viterbiAnswer + " " + book.get(keySet[page]).get(maxCandidate).text+book.get(keySet[page]).get(maxCandidate).page;
+			
 		}
-		
+		System.out.println(viterbiAnswer);
+		viterbiOutput.put(bookName, viterbiAnswer);
+		//System.out.println(viterbiOutput.containsKey(bookName));
+		//System.out.println(bookName);
 		//"[Rank: "+ book.get(keySet[page]).get(maxCandidate).rank + "]"
 		//"[Score: "+ book.get(keySet[page]).get(maxCandidate).rankedScores + "]"
 		viterbiPages.clear();
-
+		
 	}
 
 	public static int findMaxArg(int upperBound, int lowerBound, int page) {
@@ -238,7 +240,6 @@ public class Viterbi {
 		for (int i = lowerBound; i < upperBound; i++) {
 			if (viterbiPages.get(page).get(i) > maxCandidateValue) {
 				maxCandidateValue = viterbiPages.get(page).get(i);
-
 				maxCandidate = i;
 			}
 		}
@@ -250,15 +251,68 @@ public class Viterbi {
 
 		for (int i = 0; i < listOfBookNames.size(); i++) {
 			System.out.println("Book: " + (i + 1) + " " + "," + "Name: " + listOfBookNames.get(i));
-			doViterbi(allBooks.get(listOfBookNames.get(i)));
+			doViterbi(allBooks.get(listOfBookNames.get(i)), listOfBookNames.get(i));
 			System.out.println();
 			System.out.println();
 
 		}
+		
+		checkViterbiAccuracy(viterbiOutput);
 		/*
 		 * TODO Research new function that calculates transition probabilities.
 		 */
 
+	}
+	public static void checkViterbiAccuracy(HashMap<String, String> viterbiOutput) throws IOException{
+		double correct = 0;
+		double totalTokens = 0;
+		HashMap<String,String> booksTruthData = new HashMap<String, String>();
+		booksTruthData.put("gunnartaleofnors00boyerich","truth_data/gunnar-annotated.txt" );
+		booksTruthData.put("historicfurnishi00gras","truth_data/histor-annotated.txt" );
+		booksTruthData.put("jack00shergoog","truth_data/jack00-annotated.txt");
+		booksTruthData.put("johannladislavp01pyrkgoog","truth_data/johann-annotated.txt");
+		String[] viterbiOutputKeySet = new String[viterbiOutput.keySet().size()];
+		//System.out.println(viterbiOutput);
+	    
+		
+		String[] booksTruthDataKeySet = new String[booksTruthData.keySet().size()];
+		viterbiOutputKeySet = viterbiOutput.keySet().toArray(viterbiOutputKeySet);
+		
+		booksTruthDataKeySet = booksTruthData.keySet().toArray(booksTruthDataKeySet);
+		for(int k = 0;k < booksTruthDataKeySet.length ; k++){
+			
+		for(int i = 0; i< viterbiOutputKeySet.length ; i++){
+			
+			if(booksTruthDataKeySet[k].equals((viterbiOutputKeySet[i]))){
+				
+				String[] viterbiOutputTokens = viterbiOutput.get(viterbiOutputKeySet[i]).split("\\s+");
+				totalTokens = viterbiOutputTokens.length;
+				
+				FileReader fileReader = new FileReader(booksTruthData.get(booksTruthDataKeySet[k]));
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
+				String line = bufferedReader.readLine();
+				while(line != null){
+					//totalTokens++;
+					
+					line = line.replaceAll("\\s+","").trim();
+					for(int j =0;j < viterbiOutputTokens.length; j++){
+						if(line.equals(viterbiOutputTokens[j])){
+							correct++;
+						}
+					}
+					line = bufferedReader.readLine();
+					
+				}
+			
+				System.out.println("Book name: "+booksTruthDataKeySet[k]+" ,"+"Accuracy: "+(correct/totalTokens)*100+" %");
+			    correct = 0.0;
+			    totalTokens=0.0;
+				
+			}
+			
+		}
+		
+		}
 	}
 
 }
