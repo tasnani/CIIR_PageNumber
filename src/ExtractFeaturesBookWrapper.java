@@ -34,6 +34,7 @@ public class ExtractFeaturesBookWrapper {
      public static int x=0;
      public static int y=0;
      static generateDataWrapper TD = new generateDataWrapper();
+     static String[] publicArguments = new String[3];
      
   public static class PageInfo {
     String book;
@@ -321,12 +322,17 @@ public class ExtractFeaturesBookWrapper {
     
     generateDataWrapper TD=new generateDataWrapper();
     // args[0] is "/Users/tanasn/Documents/workspace/CIIR_PageNumber/raw_djvu/gunnartaleofnors00boyerich_djvu.xml"
-    //args[1] is "/Users/tanasn/Documents/workspace/CIIR_PageNumber/truth_data/gunnar-annotated.txt"
-    PrintWriter output = new PrintWriter("/Users/tanasn/Documents/workspace/CIIR_PageNumber/SVM_files/rankTestData.txt");
+    //args[1] is "/Users/tanasn/Documents/workspace/CIIR_PageNumber/SVM_files/rankTestData.txt"
+    //args[2] is "/Users/tanasn/Documents/modelFile.txt "
+    publicArguments[0] = args[0];
+    publicArguments[1] = args[1];
+    publicArguments[2] = args[2];
+    
+    PrintWriter output = new PrintWriter(args[1]);
     PrintWriter qidOutput=new PrintWriter("/Users/tanasn/Documents/workspace/CIIR_PageNumber/SVM_files/query_ids.txt");
-    TD.generateTrainingData(args[1], extracted); 
-    TD.generateTestData(extracted);
-    TD.generateRankData(output,qidOutput,extracted);
+    //TD.generateTrainingData(args[1], extracted); 
+    TD.generateTestData(extracted,qidOutput, output);
+    //TD.generateRankData(output,qidOutput,extracted);
   
     output.close();
     qidOutput.close();
@@ -490,8 +496,8 @@ public class ExtractFeaturesBookWrapper {
     public static void callSVMRank() throws IOException{
     	Runtime runtime = Runtime.getRuntime();
     	Process process = runtime.exec("/Users/tanasn/Documents/svm_rank_classify"
-    			+ " /Users/tanasn/Documents/workspace/CIIR_PageNumber/SVM_files/rankTestData.txt "
-    			+ "/Users/tanasn/Documents/modelFile.txt "
+    			+ publicArguments[1]
+    			+ publicArguments[2]
     			+ "/Users/tanasn/Documents/workspace/CIIR_PageNumber/SVM_files/rankPredictions.txt");
     }
    

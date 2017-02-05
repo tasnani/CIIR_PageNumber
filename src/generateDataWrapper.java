@@ -132,8 +132,10 @@ ArrayList<String> truthArray=new ArrayList<String>();
 		System.out.println("Total number of pages: "+numberOfPages);
 	}
 	//ArrayList<String> tempArray = new ArrayList<String>();
-	public void generateTestData(List<List<ExtractFeaturesBookWrapper.PageNumberCandidate>> book){
-    for(List<ExtractFeaturesBookWrapper.PageNumberCandidate> b: book){
+	public void generateTestData(List<List<ExtractFeaturesBookWrapper.PageNumberCandidate>> book, PrintWriter qidOutput, PrintWriter output){
+		int totalNumberOfCandidates = 0;
+		ArrayList<String> rankArray = new ArrayList<String>();
+		for(List<ExtractFeaturesBookWrapper.PageNumberCandidate> b: book){
 			
 			for( ExtractFeaturesBookWrapper.PageNumberCandidate PNC : b){
 			String s  = 0+" "+"1:"+PNC.features.get("is a number")
@@ -146,13 +148,28 @@ ArrayList<String> truthArray=new ArrayList<String>();
 			+" "+"8:"+PNC.features.get("downward % thru page")
 			+" "+"9:"+PNC.features.get("upward % thru page")
 			+" #"+PNC.imageNumber()+","+PNC.text+","+PNC.book();
-			
+			rankArray.add(s);
+			totalNumberOfCandidates++;
 			//System.out.println(s);
 			
 		   
 			}
-	}
+			
+			for(int i=0;i<=rankArray.size()-2;i++){
+				
+				QIDS.add(QID+"");
+				qidOutput.println(QID);
+				rankArray.set(i, rankArray.get(i).charAt(0)+" qid:"+QID+" "+rankArray.get(i).substring(2,rankArray.get(i).length()));
+				if(!rankArray.get(i).substring(rankArray.get(i).
+				indexOf('#')+1, rankArray.get(i).indexOf(',')).equals(rankArray.get(i+1).substring(rankArray.get(i+1).
+						indexOf('#')+1, rankArray.get(i+1).indexOf(',')))){
+					QID++;
+				}
+				
+				output.println(rankArray.get(i));
 	
+			}
+		}
 	}
 	
 	public void generateRankData(PrintWriter output, PrintWriter qidOutput ,List<List<ExtractFeaturesBookWrapper.PageNumberCandidate>> book) throws FileNotFoundException{
@@ -165,7 +182,7 @@ ArrayList<String> truthArray=new ArrayList<String>();
 		for(String s: truthArray){
 			
 	    	if(s.charAt(0)=='+'){
-	    		s="2"+s.substring(2,s.length());
+	    		s="0"+s.substring(2,s.length());
 	    		//System.out.println(s);
 	    		right++;
 	    		correctExamplesInTestData.add(s);
@@ -173,7 +190,7 @@ ArrayList<String> truthArray=new ArrayList<String>();
 	    		
 	    	}
 	    	if(s.charAt(0)=='-'){
-	    		s=s.substring(1,s.length());
+	    		s="0"+s.substring(2,s.length());
 	    		wrong++;
 	    		
 	    	}
